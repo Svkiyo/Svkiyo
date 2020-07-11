@@ -1,6 +1,6 @@
 const Discord = require('discord.js');
-const bot = new Discord.Client();
 var request = require("request");
+const bot = new Discord.Client();
 
 const prefix = process.env.PREFIX || "!";
 
