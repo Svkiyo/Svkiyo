@@ -6,7 +6,7 @@ const prefix = process.env.PREFIX || "!";
 
 bot.on('ready', () => {
   logChannel = bot.channels.cache.find(ch => ch.name === 'logs');
-  promotionChannel = bot.channels.cache.find(ch => ch.name === 'promotion');
+  promotionChannel = bot.channels.cache.find(ch => ch.name === 'promotions');
 
   logChannel.send('S V K I Y O ~ Discord BOT is online !');
   bot.user.setActivity('@svkiyo', { type: 'CUSTOM_STATUS' });
