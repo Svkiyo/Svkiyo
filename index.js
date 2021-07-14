@@ -202,4 +202,4 @@ function sessionRappel(messageDayID) {
   });
 }
 
-bot.login(process.env.BOT_TOKEN || 'NDY2MjAxNjMwOTc1NzIxNDcz.W0SWGg.UeSaqq_VIQgsEXHHVflsU-51jcY');
+bot.login(process.env.BOT_TOKEN);
