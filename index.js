@@ -179,7 +179,7 @@ cron.schedule('00 12 * * Mon,Thu,Wed,Tue,Fri,Sat,Sun', () => { // At 12:00 on Mo
 });
 
 // Annonce qu'il reste des places pour l'évènement du soir
-cron.schedule('05 18 * * Mon,Thu,Wed,Tue,Fri,Sat,Sun', () => { // At 18:00 on Monday, Thursday, Wednesday, Tuesday, Friday, Saturday, and Sunday.
+cron.schedule('00 18 * * Mon,Thu,Wed,Tue,Fri,Sat,Sun', () => { // At 18:00 on Monday, Thursday, Wednesday, Tuesday, Friday, Saturday, and Sunday.
   let messageDayID = retrieveMessageDayID();
 
   planningChannel.messages.fetch(messageDayID).then(message => {
