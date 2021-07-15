@@ -72,7 +72,7 @@ bot.on('messageReactionAdd', async (reaction, user) => { // https://discordjs.gu
   }
 
   // ----- Full -----
-  if (reaction.message.reactions.cache.get(emojiCheckedID).count > 1) {
+  if (reaction.message.reactions.cache.get(emojiCheckedID).count > 5) {
     user.send('❌ La session dont vous souhaitez vous inscrire est complète pour le moment, désolé');
     reaction.users.remove(user);
     return;
