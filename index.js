@@ -72,7 +72,7 @@ bot.on('messageReactionAdd', async (reaction, user) => { // https://discordjs.gu
   }
 
   // ----- Full -----
-  if (reaction.message.reactions.cache.get(emojiCheckedID).count > 5) {
+  if (reaction.message.reactions.cache.get(emojiCheckedID).count > 1) {
     user.send('❌ La session dont vous souhaitez vous inscrire est complète pour le moment, désolé');
     reaction.users.remove(user);
     return;
@@ -149,35 +149,10 @@ cron.schedule('00 01 * * Mon', () => { // At 01:00 on Monday.
   });
 });
 
-cron.schedule('00 12 * * Mon', () => { // At 12:00 on Monday.
-  sessionRappel(lundiMessageID);
-});
+// Rappel d'évènement le soir à 20:00
+cron.schedule('00 12 * * Mon,Thu,Wed,Tue,Fri,Sat,Sun', () => { // At 12:00 on Monday, Thursday, Wednesday, Tuesday, Friday, Saturday, and Sunday.
+  let messageDayID = retrieveMessageDayID();
 
-cron.schedule('00 12 * * Tue', () => { // At 12:00 on Tuesday.
-  sessionRappel(mardiMessageID);
-});
-
-cron.schedule('58 14 * * Wed', () => { // At 12:00 on Wednesday.
-  sessionRappel(mercrediMessageID);
-});
-
-cron.schedule('00 12 * * Thu', () => { // At 12:00 on Thursday.
-  sessionRappel(jeudiMessageID);
-});
-
-cron.schedule('00 12 * * Fri', () => { // At 12:00 on Friday.
-  sessionRappel(vendrediMessageID);
-});
-
-cron.schedule('00 12 * * Sat', () => { // At 12:00 on Saturday.
-  sessionRappel(samediMessageID);
-});
-
-cron.schedule('00 12 * * Sun', () => { // At 12:00 on Sunday.
-  sessionRappel(dimancheMessageID);
-});
-
-function sessionRappel(messageDayID) {
   let participants = '';
   planningChannel.messages.fetch(messageDayID).then(message => {
     message.reactions.cache.get(emojiCheckedID).users.fetch().then(users => {
@@ -187,19 +162,51 @@ function sessionRappel(messageDayID) {
 
       let embedParticipation = new Discord.MessageEmbed()
         .setAuthor('Rappel pour la session de ce soir')
+        .setTitle(`${message.content}`)
         .setDescription(`Les joueurs qui sont inscrits pour la session sont ${participants}`)
         .setFooter('⚠️ Votre participation est obligatoire, des mesures seront prises en cas d\'absences/retards')
         .setColor("#008000")
         .setThumbnail('https://svkiyo.com/wp-content/uploads/2021/07/svkiyo-hd.gif');
 
       playerChannel.send(embedParticipation);
-      logChannel.send(`🎯 [${new Date().toLocaleString()}] Rappel session ce soir pour ${participants.replace('\n', ' ')}`);
+      logChannel.send(`🎯 [${new Date().toLocaleString()}] Rappel session ce soir : ${message.content}\n concerne ${participants.replace('\n', ' ')}`);
 
       users.forEach(user => {
         user.send(embedParticipation);
       })
     });
   });
+});
+
+// Annonce qu'il reste des places pour l'évènement du soir
+cron.schedule('00 12 * * Mon,Thu,Wed,Tue,Fri,Sat,Sun', () => { // At 18:00 on Monday, Thursday, Wednesday, Tuesday, Friday, Saturday, and Sunday.
+  let messageDayID = retrieveMessageDayID();
+
+  planningChannel.messages.fetch(messageDayID).then(message => {
+    playerChannel.send(`Pour la session de ce soir : ${message.content} \nIl reste actuellement **${5 - message.reactions.cache.get(emojiCheckedID).count}** place(s).\nVous pouvez encore vous inscrire.`);
+    logChannel.send(`🎯 [${new Date().toLocaleString()}] Rappel **${5 - message.reactions.cache.get(emojiCheckedID).count}** place(s) disponible pour la session de ce soir.\n${message.content}`);
+  });
+});
+
+function retrieveMessageDayID() {
+  switch (new Date().getDay()) {
+    case 0:
+      return dimancheMessageID;
+    case 1:
+      return lundiMessageID;
+    case 2:
+      return mardiMessageID;
+    case 3:
+      return mercrediMessageID;
+    case 4:
+      return jeudiMessageID;
+    case 5:
+      return vendrediMessageID;
+    case 6:
+      return samediMessageID;
+    default:
+      return dimancheMessageID;
+  }
 }
 
 bot.login(process.env.BOT_TOKEN);
