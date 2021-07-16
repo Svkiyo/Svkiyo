@@ -147,6 +147,7 @@ cron.schedule('00 01 * * Mon', () => { // At 01:00 on Monday.
       }
     });
   });
+  playerChannel.send(`Le planning a été mis à jour, je vous invite à faire les inscriptions pour la semaine!`)
 });
 
 // Rappel d'évènement le soir à 20:00
@@ -169,7 +170,7 @@ cron.schedule('00 12 * * Mon,Thu,Wed,Tue,Fri,Sat,Sun', () => { // At 12:00 on Mo
         .setThumbnail('https://svkiyo.com/wp-content/uploads/2021/07/svkiyo-hd.gif');
 
       playerChannel.send(embedParticipation);
-      logChannel.send(`🎯 [${new Date().toLocaleString()}] Rappel session ce soir : ${message.content}\n concerne ${participants.replace('\n', ' ')}`);
+      logChannel.send(`🎯 [${new Date().toLocaleString()}] Rappel session ce soir : ${message.content}\n concerne ${participants.replace(/\n/g, ' ')}`);
 
       users.forEach(user => {
         user.send(embedParticipation);
